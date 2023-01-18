@@ -765,3 +765,9 @@ PhotoManager.editor.darwin.deletePath();
 [`LocallyAvailableBuilder`]: https://github.com/fluttercandies/flutter_wechat_assets_picker/blob/2055adfa74370339d10e6f09adef72f2130d2380/lib/src/widget/builder/locally_available_builder.dart
 
 [flutter/flutter#20522]: https://github.com/flutter/flutter/issues/20522
+
+
+
+changeLog;
+1.ios添加了fileSize
+2.ios添加了mimeType

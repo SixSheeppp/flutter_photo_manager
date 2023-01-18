@@ -13,6 +13,7 @@
 #import "PMMD5Utils.h"
 #import "PMRequestTypeUtils.h"
 #import "PMThumbLoadOption.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @implementation PMManager {
     BOOL __isAuth;
@@ -326,6 +327,8 @@
                                                  height:asset.pixelHeight
                                                duration:(long) asset.duration
                                                    type:type];
+
+    
     entity.phAsset = asset;
     entity.modifiedDt = modifiedTimeStamp;
     entity.lat = asset.location.coordinate.latitude;
@@ -333,7 +336,6 @@
     entity.title = needTitle ? [asset title] : @"";
     entity.favorite = asset.isFavorite;
     entity.subtype = asset.mediaSubtypes;
-    
     return entity;
 }
 
@@ -342,12 +344,18 @@
 }
 
 - (PMAssetEntity *)getAssetEntity:(NSString *)assetId withCache:(BOOL)withCache {
+    if (assetId == nil || assetId.isEmpty) {
+        NSLog(@" getAssetEntity assetId is null !!!!");
+        return nil;
+    }
+
     PMAssetEntity *entity;
     if (withCache) {
         entity = [cacheContainer getAssetEntity:assetId];
         if (entity) {
             return entity;
         }
+
     }
     PHFetchResult<PHAsset *> *result =
     [PHAsset fetchAssetsWithLocalIdentifiers:@[assetId] options:nil];
@@ -457,6 +465,7 @@
 - (void)fetchLivePhotosFile:(PHAsset *)asset handler:(NSObject <PMResultHandler> *)handler progressHandler:(NSObject <PMProgressHandlerProtocol> *)progressHandler {
     PHAssetResource *resource = [asset getLivePhotosResource];
     if (!resource) {
+
         [handler reply:nil];
         return;
     }
@@ -1128,6 +1137,13 @@
         return [asset originalFilenameWithSubtype:subtype];
     }
     return @"";
+}
+- (NSUInteger)getFileSizeAsyncWithAssetId:(NSString *)assetId {
+    PHAsset *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[assetId] options:nil].firstObject;
+    if (asset) {
+        return [asset fileSize];
+    }
+    return 0;
 }
 
 - (NSString *)getMimeTypeAsyncWithAssetId:(NSString *)assetId {

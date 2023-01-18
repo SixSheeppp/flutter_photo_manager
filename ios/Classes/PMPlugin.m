@@ -410,6 +410,10 @@
             NSString *assetId = call.arguments[@"id"];
             NSString *mimeType = [manager getMimeTypeAsyncWithAssetId:assetId];
             [handler reply:mimeType];
+        } else if ([call.method isEqualToString:@"getFileSizeAsync"]) {
+            NSString *assetId = call.arguments[@"id"];
+            NSUInteger size = [manager getFileSizeAsyncWithAssetId:assetId];
+            [handler reply:@(size)];
         } else if ([@"getMediaUrl" isEqualToString:call.method]) {
             [manager getMediaUrl:call.arguments[@"id"] resultHandler:handler];
         } else if ([@"fetchEntityProperties" isEqualToString:call.method]) {

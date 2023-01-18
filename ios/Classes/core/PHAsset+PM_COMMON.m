@@ -85,6 +85,15 @@
     return nil;
 }
 
+- (NSUInteger)fileSize {
+    NSArray<PHAssetResource *> *resources = [PHAssetResource assetResourcesForAsset:self];
+    if (resources.count == 0) {
+        return 0;
+    }
+    PHAssetResource *firstRes = resources.firstObject;
+    return (NSUInteger)[[firstRes valueForKey:@"fileSize"] unsignedIntegerValue];
+}
+
 - (BOOL)isAdjust {
     NSArray<PHAssetResource *> *resources =
     [PHAssetResource assetResourcesForAsset:self];

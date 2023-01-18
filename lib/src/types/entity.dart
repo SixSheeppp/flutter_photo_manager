@@ -664,6 +664,22 @@ class AssetEntity {
     return null;
   }
 
+  /// file size of Asset
+  int? _fileSize;
+
+  Future<int> fileSize() async {
+    if (_fileSize != null) return _fileSize!;
+
+    int? tempFileSize;
+    if (Platform.isIOS) {
+      tempFileSize = await plugin.getFileSizeAsync(id);
+    } else {
+      File? assetFile = await _getFile();
+      tempFileSize = assetFile?.lengthSync();
+    }
+    return _fileSize = tempFileSize ?? 0;
+  }
+
   bool get _platformMatched =>
       Platform.isIOS || Platform.isMacOS || Platform.isAndroid;
 
