@@ -66,6 +66,8 @@ typedef void (^AssetResult)(PMAssetEntity *);
 
 - (NSString*)getTitleAsyncWithAssetId: (NSString *) assetId;
 
+- (NSUInteger)getFileSizeAsyncWithAssetId:(NSString *)assetId;
+
 - (void)getMediaUrl:(NSString *)assetId resultHandler:(NSObject <PMResultHandler> *)handler;
 
 - (NSArray<PMAssetPathEntity *> *)getSubPathWithId:(NSString *)id type:(int)type albumType:(int)albumType option:(PMFilterOptionGroup *)option;

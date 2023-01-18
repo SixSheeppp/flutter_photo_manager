@@ -46,9 +46,11 @@ class ImageScannerPlugin : FlutterPlugin, ActivityAware {
     }
 
     override fun onDetachedFromActivity() {
+        plugin?.bindActivity(null)
         binding?.let {
             onRemoveRequestPermissionResultListener(it)
         }
+        binding = null
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {

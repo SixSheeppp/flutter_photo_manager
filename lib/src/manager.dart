@@ -221,6 +221,15 @@ class PhotoManager {
     return null;
   }
 
+  static Future<int?> _getFileSizeWithId(String id) async {
+    if (Platform.isIOS) {
+      return _plugin.getFileSizeAsync(id);
+    } else {
+      File? assetFile = await _getFileWithId(id);
+      return assetFile?.lengthSync() ?? 0;
+    }
+  }
+
   static Future<Uint8List?> _getFullDataWithId(String id) async {
     return _plugin.getOriginBytes(id);
   }

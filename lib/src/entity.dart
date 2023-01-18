@@ -161,8 +161,7 @@ class AssetPathEntity {
   }
 
   @override
-  int get hashCode =>
-      hashValues(id, name, assetCount, albumType, type, lastModified, isAll);
+  int get hashCode => hashValues(id, name, assetCount, albumType, type, lastModified, isAll);
 
   @override
   String toString() {
@@ -230,6 +229,14 @@ class AssetEntity {
       default:
         return AssetType.other;
     }
+  }
+
+  /// file size of Asset
+  int? _fileSize;
+
+  Future<int> fileSize() async {
+    if (_fileSize != null) return _fileSize!;
+    return PhotoManager._getFileSizeWithId(id).then((value) => _fileSize = value ?? 0);
   }
 
   /// Asset type int value.
@@ -316,8 +323,7 @@ class AssetEntity {
   /// Usually, you can use the [file] attribute.
   ///
   /// If you need to see the loading status, look at the [loadFile].
-  Future<File?> get originFile async =>
-      PhotoManager._getFileWithId(id, isOrigin: true);
+  Future<File?> get originFile async => PhotoManager._getFileWithId(id, isOrigin: true);
 
   /// The asset's bytes.
   ///

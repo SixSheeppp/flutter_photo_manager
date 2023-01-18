@@ -294,8 +294,10 @@
             
             [manager getFullSizeFileWithId:id isOrigin:isOrigin resultHandler:handler progressHandler:progressHandler];
             
-        } else if ([call.method isEqualToString:@"releaseMemCache"]) {
+        }
+        else if ([call.method isEqualToString:@"releaseMemCache"]) {
             [manager clearCache];
+            [handler reply:nil];
         } else if ([call.method isEqualToString:@"fetchPathProperties"]) {
             NSString *id = call.arguments[@"id"];
             int requestType = [call.arguments[@"type"] intValue];
@@ -321,7 +323,7 @@
             } else {
                 [notificationManager stopNotify];
             }
-            
+            [handler reply:nil];
         } else if ([call.method isEqualToString:@"isNotifying"]) {
             BOOL isNotifying = [notificationManager isNotifying];
             [handler reply:@(isNotifying)];
@@ -398,6 +400,10 @@
             NSString *assetId = call.arguments[@"id"];
             NSString *title = [manager getTitleAsyncWithAssetId:assetId];
             [handler reply:title];
+        } else if ([call.method isEqualToString:@"getFileSizeAsync"]) {
+            NSString *assetId = call.arguments[@"id"];
+            NSUInteger size = [manager getFileSizeAsyncWithAssetId:assetId];
+            [handler reply:@(size)];
         } else if ([@"getMediaUrl" isEqualToString:call.method]) {
             [manager getMediaUrl:call.arguments[@"id"] resultHandler:handler];
         } else if ([@"getPropertiesFromAssetEntity" isEqualToString:call.method]) {

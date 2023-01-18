@@ -16,6 +16,7 @@
 #import "MD5Utils.h"
 #import "PMThumbLoadOption.h"
 #import "PMImageUtil.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @implementation PMManager {
     BOOL __isAuth;
@@ -310,17 +311,23 @@
                                                  height:asset.pixelHeight
                                                duration:(long) asset.duration
                                                    type:type];
+
+    
     entity.phAsset = asset;
     entity.modifiedDt = modifiedTimeStamp;
     entity.lat = asset.location.coordinate.latitude;
     entity.lng = asset.location.coordinate.longitude;
     entity.title = needTitle ? [asset title] : @"";
     entity.favorite = asset.isFavorite;
-    
+
     return entity;
 }
 
 - (PMAssetEntity *)getAssetEntity:(NSString *)assetId {
+    if(assetId == nil || assetId.isEmpty) {
+        NSLog(@" getAssetEntity assetId is null !!!!");
+        return nil;
+    }
     PMAssetEntity *entity = [cacheContainer getAssetEntity:assetId];
     if (entity) {
         return entity;
@@ -424,6 +431,7 @@
         [handler replyError:@"asset is not found"];
     }
 }
+
 
 - (void)fetchOriginVideoFile:(PHAsset *)asset handler:(NSObject <PMResultHandler> *)handler progressHandler:(NSObject <PMProgressHandlerProtocol> *)progressHandler {
     NSArray<PHAssetResource *> *resources =
@@ -964,6 +972,13 @@
         return [asset title];
     }
     return @"";
+}
+- (NSUInteger)getFileSizeAsyncWithAssetId:(NSString *)assetId {
+    PHAsset *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[assetId] options:nil].firstObject;
+    if (asset) {
+        return [asset fileSize];
+    }
+    return 0;
 }
 
 - (void)getMediaUrl:(NSString *)assetId resultHandler:(NSObject <PMResultHandler> *)handler {

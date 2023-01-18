@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)isAdjust;
 
+- (NSUInteger)fileSize;
+
 - (PHAssetResource *)getAdjustResource;
 
 - (void)requestAdjustedData:(void (^)(NSData *_Nullable result))block;

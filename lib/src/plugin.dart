@@ -129,6 +129,10 @@ class Plugin with BasePlugin, IosPlugin, AndroidPlugin {
     return _channel.invokeMethod('getFullFile', params);
   }
 
+  Future<int?> getFileSizeAsync(String id) {
+    return _channel.invokeMethod('getFileSizeAsync', {'id': id});
+  }
+
   Future<void> setLog(bool isLog) {
     return _channel.invokeMethod('log', isLog);
   }

@@ -29,27 +29,18 @@ object ThumbnailUtil {
     ) {
         val resultHandler = ResultHandler(result)
 
-        Glide.with(ctx)
-            .asBitmap()
-            .load(File(path))
-            .priority(Priority.IMMEDIATE)
-            .into(object : BitmapTarget(width, height) {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    super.onResourceReady(resource, transition)
-                    val bos = ByteArrayOutputStream()
-
-                    resource.compress(format, quality, bos)
-                    resultHandler.reply(bos.toByteArray())
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    resultHandler.reply(null)
-                }
-
-                override fun onLoadFailed(errorDrawable: Drawable?) {
-                    resultHandler.reply(null)
-                }
-            })
+        try {
+            val resource = Glide.with(ctx)
+                .asBitmap()
+                .load(File(path))
+                .priority(Priority.IMMEDIATE)
+                .submit(width, height).get()
+            val bos = ByteArrayOutputStream()
+            resource.compress(format, quality, bos)
+            resultHandler.reply(bos.toByteArray())
+        } catch (e: Exception) {
+            resultHandler.reply(null)
+        }
     }
 
     fun getThumbOfUri(
@@ -61,23 +52,18 @@ object ThumbnailUtil {
         quality: Int,
         callback: (ByteArray?) -> Unit
     ) {
-        Glide.with(context)
-            .asBitmap()
-            .load(uri)
-            .priority(Priority.IMMEDIATE)
-            .into(object : BitmapTarget(width, height) {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    super.onResourceReady(resource, transition)
-                    val bos = ByteArrayOutputStream()
-
-                    resource.compress(format, quality, bos)
-                    callback(bos.toByteArray())
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    callback(null)
-                }
-            })
+        try {
+            val resource = Glide.with(context)
+                .asBitmap()
+                .load(uri)
+                .priority(Priority.IMMEDIATE)
+                .submit(width, height).get()
+            val bos = ByteArrayOutputStream()
+            resource.compress(format, quality, bos)
+            callback(bos.toByteArray())
+        } catch (e: Exception) {
+            callback(null)
+        }
     }
 
     fun requestCacheThumb(

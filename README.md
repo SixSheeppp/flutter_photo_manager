@@ -571,3 +571,10 @@ If you have other articles about this library, you can contact me or open PR her
 ## Migration Guide
 
 See [Migration-Guide](./Migration-Guide.md)
+
+
+
+
+changeLog;
+1.ios添加了fileSize
+2.ios添加了mimeType

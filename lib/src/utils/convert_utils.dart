@@ -1,6 +1,7 @@
 import 'package:photo_manager/photo_manager.dart';
 
 class ConvertUtils {
+  final _avoidWarning = 1;
   static List<AssetPathEntity> convertPath(
     Map data, {
     int type = 0,
@@ -75,7 +76,6 @@ class ConvertUtils {
       relativePath: data['relativePath'],
       latitude: data['lat'],
       longitude: data['lng'],
-      mimeType: data['mimeType'],
     );
 
     return result;
