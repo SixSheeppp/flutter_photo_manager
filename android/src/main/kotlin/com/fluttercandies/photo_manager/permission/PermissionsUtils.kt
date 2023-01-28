@@ -213,74 +213,15 @@ class PermissionsUtils {
         }
     }
 
-    @RequiresApi(33)
-    fun addManifestWithPermission33(
-        context: Context,
-        permissions: ArrayList<String>,
-        call: MethodCall,
-        resultHandler: ResultHandler
-    ) {
-        val method = call.method
-        if (method == Methods.requestPermissionExtend) {
-            // Check all permissions listed in the manifest, regardless the request type.
-            if (havePermissionInManifest(context, Manifest.permission.READ_MEDIA_IMAGES)) {
-                permissions.add(Manifest.permission.READ_MEDIA_IMAGES)
-            }
-            if (havePermissionInManifest(context, Manifest.permission.READ_MEDIA_VIDEO)) {
-                permissions.add(Manifest.permission.READ_MEDIA_VIDEO)
-            }
-            if (havePermissionInManifest(context, Manifest.permission.READ_MEDIA_AUDIO)) {
-                permissions.add(Manifest.permission.READ_MEDIA_AUDIO)
-            }
-            return
-        } else if (!Methods.android13PermissionMethods.contains(method)) {
-            return
-        }
-
-        val type = call.argument<Int>("type")
-        if (type == null) {
-            resultHandler.replyError("The $method must pass the 'type' params")
-            return
-        }
-        val haveImage = RequestTypeUtils.containsImage(type)
-        val haveVideo = RequestTypeUtils.containsVideo(type)
-        val haveAudio = RequestTypeUtils.containsAudio(type)
-
-        fun checkAndAddPermission(requestHavePermission: Boolean, tag: String, manifestPermission: String) {
-            if (!requestHavePermission) {
-                return
-            }
-
-            if (!havePermissionInManifest(context, manifestPermission)) {
-                throw IllegalStateException("Request $tag must have $manifestPermission in manifest.")
-            }
-            permissions.add(manifestPermission)
-        }
-
-        try {
-            checkAndAddPermission(haveImage, "image", Manifest.permission.READ_MEDIA_IMAGES)
-            checkAndAddPermission(haveVideo, "video", Manifest.permission.READ_MEDIA_VIDEO)
-            checkAndAddPermission(haveAudio, "audio", Manifest.permission.READ_MEDIA_AUDIO)
-        } catch (e: IllegalStateException) {
-            resultHandler.replyError("Permissions check error", e.message, e)
-        }
-
-    }
-
     fun havePermissionInManifest(context: Context, permission: String): Boolean {
         val applicationInfo = context.applicationInfo
-        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.packageManager.getPackageInfo(
-                applicationInfo.packageName,
-                PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong())
-            )
-        } else {
+        val packageInfo =
             @Suppress("DEPRECATION")
             context.packageManager.getPackageInfo(
                 applicationInfo.packageName,
                 PackageManager.GET_PERMISSIONS
             )
-        }
+
         return packageInfo.requestedPermissions.contains(permission)
     }
 }

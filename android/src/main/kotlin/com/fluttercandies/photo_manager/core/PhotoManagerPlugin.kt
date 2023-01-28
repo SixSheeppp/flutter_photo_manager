@@ -159,8 +159,7 @@ class PhotoManagerPlugin(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         val needReadPermission =
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
-                    && permissionsUtils.havePermissionInManifest(
+            permissionsUtils.havePermissionInManifest(
                 applicationContext,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             )
@@ -183,14 +182,7 @@ class PhotoManagerPlugin(
                 permissions.add(Manifest.permission.ACCESS_MEDIA_LOCATION)
             }
         }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissionsUtils.addManifestWithPermission33(applicationContext, permissions, call, resultHandler)
-            if (resultHandler.isReplied()) {
-                return
-            }
-        }
-
+        
         val utils = permissionsUtils.apply {
             withActivity(activity)
             permissionsListener = object : PermissionsListener {
