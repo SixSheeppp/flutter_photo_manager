@@ -3,6 +3,8 @@ package com.fluttercandies.photo_manager.core.utils
 import android.provider.MediaStore
 import com.fluttercandies.photo_manager.constant.AssetType
 import com.fluttercandies.photo_manager.core.entity.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 object ConvertUtils {
     fun convertPaths(list: List<AssetPathEntity>): Map<String, Any> {
@@ -56,7 +58,7 @@ object ConvertUtils {
     }
 
     fun getOptionFromType(map: Map<*, *>, type: AssetType): FilterCond {
-        val key = type.name.lowercase()
+        val key = type.name.toLowerCase(Locale.getDefault())
         if (map.containsKey(key)) {
             val value = map[key]
             if (value is Map<*, *>) {
