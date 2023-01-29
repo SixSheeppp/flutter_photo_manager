@@ -298,9 +298,8 @@ class AssetPathEntity {
 /// It represents a series of fields `MediaStore` on Android
 /// and the `PHAsset` object on iOS/macOS.
 /// {@endtemplate}
-@immutable
 class AssetEntity {
-  const AssetEntity({
+  AssetEntity({
     required this.id,
     required this.typeInt,
     required this.width,
